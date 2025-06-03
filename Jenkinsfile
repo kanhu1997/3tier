@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DB_HOST = '192.168.254.1333'
+        DB_HOST = '192.168.254.133'
         DB_USER = 'appserver'
         DB_PASS = 'pass@123'
         DB_NAME = 'appdb'
@@ -12,6 +12,14 @@ pipeline {
                 // Clean workspace and clone the latest code from GitHub
                 deleteDir()
                 git branch: 'main', url: 'https://github.com/kanhu1997/3tier.git'
+            }
+        }
+        stage('Check Database Connection') {
+            steps {
+                sh '''
+                echo "Checking PostgreSQL connection..."
+                PGPASSWORD=$DB_PASS psql -h $DB_HOST -U $DB_USER -d $DB_NAME -c "\\q"
+                '''
             }
         }
         stage('Build Frontend') {
