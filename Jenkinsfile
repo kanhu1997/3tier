@@ -2,9 +2,9 @@ pipeline {
     agent any
     environment {
         DB_HOST = '192.168.254.1333'
-        DB_USER = 'your_db_user'
-        DB_PASS = 'your_db_password'
-        DB_NAME = 'your_db_name'
+        DB_USER = 'appserver'
+        DB_PASS = 'pass@123'
+        DB_NAME = 'appdb'
     }
     stages {
         stage('Build Frontend') {
