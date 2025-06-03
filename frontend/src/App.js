@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import LoginSignup from './LoginSignup';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/users';
+// Use Jenkins server IP for API URL
+const API_URL = process.env.REACT_APP_API_URL || 'http://192.168.254.131:5000/api/users';
 
 function App() {
   const [users, setUsers] = useState([]);
