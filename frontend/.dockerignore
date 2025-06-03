@@ -1,0 +1,8 @@
+// .dockerignore for frontend and backend
+node_modules
+build
+dist
+.env
+.git
+.gitignore
+Dockerfile
