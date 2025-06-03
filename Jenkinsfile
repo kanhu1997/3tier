@@ -7,6 +7,13 @@ pipeline {
         DB_NAME = 'appdb'
     }
     stages {
+        stage('Clone Repository') {
+            steps {
+                // Clean workspace and clone the latest code from GitHub
+                deleteDir()
+                git branch: 'main', url: 'https://github.com/kanhu1997/3tier.git'
+            }
+        }
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
