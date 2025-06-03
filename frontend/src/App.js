@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import LoginSignup from './LoginSignup';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/users';
 
@@ -6,13 +7,16 @@ function App() {
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({ name: '', email: '' });
   const [editing, setEditing] = useState(null);
+  const [user, setUser] = useState(null);
 
   // Fetch users
   useEffect(() => {
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(setUsers);
-  }, []);
+    if (user) {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(setUsers);
+    }
+  }, [user]);
 
   // Handle form input
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
@@ -33,9 +37,9 @@ function App() {
   };
 
   // Edit user
-  const handleEdit = user => {
-    setForm({ name: user.name, email: user.email });
-    setEditing(user.id);
+  const handleEdit = userObj => {
+    setForm({ name: userObj.name, email: userObj.email });
+    setEditing(userObj.id);
   };
 
   // Delete user
@@ -44,9 +48,14 @@ function App() {
     fetch(API_URL).then(res => res.json()).then(setUsers);
   };
 
+  if (!user) {
+    return <LoginSignup onAuth={setUser} />;
+  }
+
   return (
     <div style={{ maxWidth: 600, margin: '2rem auto', fontFamily: 'sans-serif' }}>
       <h1>User Management</h1>
+      <div style={{ marginBottom: 10 }}>Welcome, {user.name} (<span>{user.email}</span>) <button onClick={() => setUser(null)}>Logout</button></div>
       <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
         <input name="name" value={form.name} onChange={handleChange} placeholder="Name" required />
         <input name="email" value={form.email} onChange={handleChange} placeholder="Email" required type="email" />
@@ -58,13 +67,13 @@ function App() {
           <tr><th>Name</th><th>Email</th><th>Actions</th></tr>
         </thead>
         <tbody>
-          {users.map(user => (
-            <tr key={user.id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
+          {users.map(userObj => (
+            <tr key={userObj.id}>
+              <td>{userObj.name}</td>
+              <td>{userObj.email}</td>
               <td>
-                <button onClick={() => handleEdit(user)}>Edit</button>
-                <button onClick={() => handleDelete(user.id)}>Delete</button>
+                <button onClick={() => handleEdit(userObj)}>Edit</button>
+                <button onClick={() => handleDelete(userObj.id)}>Delete</button>
               </td>
             </tr>
           ))}
